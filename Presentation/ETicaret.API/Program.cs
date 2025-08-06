@@ -6,6 +6,7 @@ builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
 
+await app.ExecuteAsync(); 
 
 app.MapOpenApi();
 app.UseSwagger();

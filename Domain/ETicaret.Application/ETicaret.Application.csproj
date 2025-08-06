@@ -7,7 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="CQRS\" />
+      <Folder Include="CQRS\Commands\Auths\" />
+      <Folder Include="CQRS\Handlers\Auths\" />
+      <Folder Include="CQRS\Queries\" />
+      <Folder Include="CQRS\Results\Auths\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ETicaret.Domain\ETicaret.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="13.0.0" />
     </ItemGroup>
 
 </Project>
