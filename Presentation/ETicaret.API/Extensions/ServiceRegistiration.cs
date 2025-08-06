@@ -2,6 +2,7 @@ using ETicaret.Domain.Entities;
 using ETicaret.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETicaret.API.Extensions;
 
@@ -12,6 +13,15 @@ public static class ServiceRegistiration
         services.AddControllers();
         services.AddSwaggerGen();
         services.AddOpenApi();
+        services.AddCors(opt =>
+        {
+            opt.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
         // DbContext ayarlaması yapıldı 
         services.AddDbContext<ETicaretDbContext>(opt =>
             opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
