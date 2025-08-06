@@ -22,11 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Domain\ETicaret.Application\ETicaret.Application.csproj" />
       <ProjectReference Include="..\..\Domain\ETicaret.Domain\ETicaret.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>
