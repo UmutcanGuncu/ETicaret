@@ -1,12 +1,21 @@
+using System.Security.Claims;
+using System.Text;
 using ETicaret.API.Localizations;
+using ETicaret.API.Validations;
 using ETicaret.Application.Abstractions;
+using ETicaret.Application.CQRS.Commands.Auths;
 using ETicaret.Application.CQRS.Handlers.Auths;
 using ETicaret.Domain.Entities;
 using ETicaret.Persistence.Contexts;
 using ETicaret.Persistence.Services;
+using FluentValidation;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace ETicaret.API.Extensions;
 
@@ -15,7 +24,31 @@ public static class ServiceRegistiration
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllers();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
         services.AddOpenApi();
         // cors politikası ayarlaması gerçekleştirildi
         services.AddCors(opt =>
@@ -27,6 +60,8 @@ public static class ServiceRegistiration
                        .AllowAnyHeader();
             });
         });
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
         // MediatR ayarlaması
         services.AddMediatR(opt => opt.RegisterServicesFromAssemblies(
             typeof(Program).Assembly,
@@ -43,13 +78,42 @@ public static class ServiceRegistiration
             .AddRoles<AppRole>()
             .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
-        
+       //Fluent Validation Configurations
+       services.AddScoped<IValidator<RegisterUserCommandRequest>, RegisterUserValidator>();
+       services.AddFluentValidationAutoValidation();
+       services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
+       
         // Dependecy injection ayarlamaları
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IGenericService, GenericService>(); // özelleştirme yapılacak
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new()
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+
+                    ValidAudience = configuration["JWT:Audience"],
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"])),
+                    LifetimeValidator = (notBefore, expires, securityToken, validationParameters) =>
+                        expires != null ? expires > DateTime.UtcNow : false,
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                    NameClaimType = ClaimTypes.Name
+                };
+            });
         return services;
     }
 }
