@@ -7,8 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="CQRS\Commands\Auths\" />
-      <Folder Include="CQRS\Handlers\Auths\" />
       <Folder Include="CQRS\Queries\" />
       <Folder Include="CQRS\Results\Auths\" />
     </ItemGroup>
@@ -19,6 +17,7 @@
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="13.0.0" />
+      <PackageReference Include="Riok.Mapperly" Version="4.2.1" />
     </ItemGroup>
 
 </Project>

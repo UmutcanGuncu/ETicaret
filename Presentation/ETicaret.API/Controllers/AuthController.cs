@@ -1,24 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ETicaret.Application.CQRS.Commands.Auths;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETicaret.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController() : ControllerBase
+    public class AuthController(IMediator mediator) : ControllerBase
     {
         [HttpPost("[action]")]
         public async Task<IActionResult> Login()
         {
-            
             return Ok();
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register()
+        public async Task<IActionResult> Register(RegisterUserCommandRequest request)
         {
-            
-          
-            return Ok();
+            var result = await mediator.Send(request);
+            if(result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
     }
 

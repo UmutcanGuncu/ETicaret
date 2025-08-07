@@ -19,7 +19,7 @@ public class LocalizationIdentityErrorDescriber : IdentityErrorDescriber
         public override IdentityError UserLockoutNotEnabled() { return new () { Code = nameof(UserLockoutNotEnabled), Description = "Lockout is not enabled for this user." }; }
         public override IdentityError UserAlreadyInRole(string role) { return new () { Code = nameof(UserAlreadyInRole), Description = $"Kullanıcının Halihazırda'{role}' Sahip." }; }
         public override IdentityError UserNotInRole(string role) { return new () { Code = nameof(UserNotInRole), Description = $"User is not in role '{role}'." }; }
-        public override IdentityError PasswordTooShort(int length) { return new () { Code = nameof(PasswordTooShort), Description = $"Passwords must be at least {length} characters." }; }
+        public override IdentityError PasswordTooShort(int length) { return new () { Code = nameof(PasswordTooShort), Description = $"Şifreniz en az {length} karakter olmalı." }; }
         public override IdentityError PasswordRequiresNonAlphanumeric() { return new () { Code = nameof(PasswordRequiresNonAlphanumeric), Description = "Şifreniz En Az Bir Tane Özel Karakter (!, @, # vb...) İçermelidir" }; }
         public override IdentityError PasswordRequiresDigit() { return new () { Code = nameof(PasswordRequiresDigit), Description = "Şifreniz En Az Bir Tane Rakam ('0'-'9')  İçermelidir" }; }
         public override IdentityError PasswordRequiresLower() { return new () { Code = nameof(PasswordRequiresLower), Description = "Şifreniz En Az Bir Tane Küçük Harf ('a'-'z') İçermelidir." }; }
