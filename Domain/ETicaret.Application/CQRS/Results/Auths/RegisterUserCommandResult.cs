@@ -1,4 +1,4 @@
-namespace ETicaret.Application.CQRS.Results;
+namespace ETicaret.Application.CQRS.Results.Auths;
 
 public class RegisterUserCommandResult
 {

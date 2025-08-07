@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ETicaret.Persistence.Services;
 
-public class AuthService(UserManager<AppUser> userManager, IRoleService roleService) : IAuthService
+public class AuthService(UserManager<AppUser> userManager, IRoleService roleService, SignInManager<AppUser> signInManager,ITokenService tokenService) : IAuthService
 {
     public async Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto)
     {
@@ -36,8 +36,33 @@ public class AuthService(UserManager<AppUser> userManager, IRoleService roleServ
         };
     }
 
-    public Task<LoginResultDto> LoginAsync(LoginDto loginDto)
+    public async Task<LoginResultDto> LoginAsync(LoginDto loginDto)
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByEmailAsync(loginDto.Email);
+        if (user == null)
+            return new()
+            {
+                Success = false,
+                Message = "Kullanıcı Bulunamadı"
+            };
+        SignInResult signInResult = await signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+        if (signInResult.Succeeded)
+        {
+            await signInManager.PasswordSignInAsync(user, loginDto.Password, true, false);
+            var token = await tokenService.CreateAccessTokenAsync(user.Id.ToString());
+            return new()
+            {
+                Success = true,
+                Message = "Giriş İşlemi Başarıyla Gerçekleştirilmiştir",
+                Token = token,
+                UserId = user.Id
+            };
+        }
+
+        return new()
+        {
+            Success = false,
+            Message = "E Posta Adresiniz veya Şifreniz Hatalı"
+        };
     }
 }

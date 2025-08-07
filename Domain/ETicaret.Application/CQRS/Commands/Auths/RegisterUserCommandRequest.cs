@@ -1,4 +1,4 @@
-using ETicaret.Application.CQRS.Results;
+using ETicaret.Application.CQRS.Results.Auths;
 using MediatR;
 
 namespace ETicaret.Application.CQRS.Commands.Auths;

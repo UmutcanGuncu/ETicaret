@@ -60,7 +60,7 @@ public static class ServiceRegistiration
                        .AllowAnyHeader();
             });
         });
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        
 
         // MediatR ayarlaması
         services.AddMediatR(opt => opt.RegisterServicesFromAssemblies(
@@ -79,7 +79,9 @@ public static class ServiceRegistiration
             .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
        //Fluent Validation Configurations
+       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
        services.AddScoped<IValidator<RegisterUserCommandRequest>, RegisterUserValidator>();
+       services.AddScoped<IValidator<LoginUserCommandRequest>, LoginUserValidator>();
        services.AddFluentValidationAutoValidation();
        services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
        

@@ -14,6 +14,6 @@ public class RegisterUserValidator : AbstractValidator<RegisterUserCommandReques
         RuleFor(x=>x.Password).NotEmpty().WithMessage("Şifre Bilgisi Boş Geçilemez");
 
         RuleFor(x => x.Email).EmailAddress().WithMessage("E Mail Adresinizi Formata Uygun Yazınız");
-        RuleFor(x=>x.PhoneNumber).Matches("^\\d{10}$");
+        RuleFor(x=>x.PhoneNumber).Matches(@"^0?\d{10}$").WithMessage("Telefon Numarasını Doğru Yazınız");
     }
 }

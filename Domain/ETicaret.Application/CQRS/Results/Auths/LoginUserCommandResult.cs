@@ -1,6 +1,8 @@
-namespace ETicaret.Application.DTOs.Auths.Results;
+using ETicaret.Application.DTOs;
 
-public class LoginResultDto
+namespace ETicaret.Application.CQRS.Results.Auths;
+
+public class LoginUserCommandResult
 {
     public bool Success { get; set; }
     public Guid? UserId { get; set; }

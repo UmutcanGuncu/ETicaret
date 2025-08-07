@@ -4,7 +4,7 @@ namespace ETicaret.API.Localizations;
 
 public class LocalizationIdentityErrorDescriber : IdentityErrorDescriber
 {
-     public override IdentityError DuplicateUserName(string userName){ return new() { Code = "DuplicateUserName", Description = $"{userName} Kullanılmaktadır. Lütfen Başka Bir Tc Kimlik Numarası Giriniz" };}
+     public override IdentityError DuplicateUserName(string userName){ return new() { Code = "DuplicateUserName", Description = $"{userName} Kullanılmaktadır. Lütfen Başka Bir Kullanıcı Adı Giriniz" };}
         public override IdentityError DuplicateEmail(string email) {return new() { Code = "DuplicateEmail", Description = $"{email} Kullanılmaktadır. Lütfen Başka Bir E Posta Adresi Seçiniz" };}
         public override IdentityError DefaultError() { return new () { Code = nameof(DefaultError), Description = $"Bilinmeyen Bir Hata Oluştu" }; }
         public override IdentityError ConcurrencyFailure() { return new() { Code = nameof(ConcurrencyFailure), Description = "Nesne Üzerinde Değişiklik Yapılmış" }; }

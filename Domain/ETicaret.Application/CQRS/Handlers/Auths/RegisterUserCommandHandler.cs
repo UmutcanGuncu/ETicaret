@@ -1,7 +1,7 @@
 using ETicaret.Application.Abstractions;
 using ETicaret.Application.Configurations;
 using ETicaret.Application.CQRS.Commands.Auths;
-using ETicaret.Application.CQRS.Results;
+using ETicaret.Application.CQRS.Results.Auths;
 using MediatR;
 
 namespace ETicaret.Application.CQRS.Handlers.Auths;
